@@ -1,10 +1,13 @@
 from bottle import route, run
 import os
+from pprint import pprint
 
 
 @route('/callback', method='POST')
 def callback():
-    pass
+    events = request.json['events']
+    for event in events:
+        pprint(event)
 
 
 if __name__ == '__main__':
