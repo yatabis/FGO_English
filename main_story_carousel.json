@@ -6,7 +6,9 @@
       "type": "carousel",
       "columns": [
         {
-          "thumbnailImageUrl"
+          "thumbnailImageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/冬木.png",
+          "imageBackgroundColor": "#001122",
+          "text": "炎上汚染都市　冬木",
         }
       ],
       "imageAspectRatio": "rectangle",
