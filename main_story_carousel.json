@@ -3,16 +3,72 @@
     "type": "template",
     "altText": "Main Story 1",
     "template": {
-      "type": "carousel",
+      "type": "image_carousel",
       "columns": [
         {
-          "thumbnailImageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/冬木.png",
-          "imageBackgroundColor": "#001122",
-          "text": "炎上汚染都市　冬木",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/冬木.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=F"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/オルレアン.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=1"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/セプテム.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=2"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/オケアノス.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=3"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/ロンドン.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=4"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/イ・プルーリバス・ウナム.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=5"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/キャメロット.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=6"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/バビロニア.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=7"
+          }
+        },
+        {
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/ソロモン.png",
+          "action": {
+            "type": "postback",
+            "data": "Chapter=FIN"
+          }
         }
-      ],
-      "imageAspectRatio": "rectangle",
-      "imageSize": "contain"
+      ]
     }
   },
   {
