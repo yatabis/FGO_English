@@ -5,7 +5,9 @@
     "template": {
       "type": "carousel",
       "columns": [
-        {}
+        {
+          "thumbnailImageUrl"
+        }
       ],
       "imageAspectRatio": "rectangle",
       "imageSize": "contain"

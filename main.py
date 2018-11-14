@@ -12,7 +12,6 @@ REPLY_EP = "https://api.line.me/v2/bot/message/reply"
 
 def reply_message(token, messages):
     body = {'replyToken': token, 'messages': messages}
-    print(body)
     req = requests.post(REPLY_EP, data=json.dumps(body, ensure_ascii=False).encode("utf-8"), headers=HEADER)
     if req.status_code == 200:
         pprint(req.json())
