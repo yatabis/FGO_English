@@ -1,8 +1,12 @@
-{
-  "type": "template",
-  "altText": "Main Story Carousel",
-  template: {
-    "type": "carousel",
-
+[
+  {
+    "type": "template",
+    "altText": "Main Story 1",
+    template: {
+      "type": "carousel",
+      "columns": [
+        {}
+      ]
+    }
   }
-}
+]

@@ -11,9 +11,9 @@ REPLY_EP = "https://api.line.me/v2/bot/message/reply"
 
 
 def reply_message(token, messages):
-    body = json.dumps({'replyToken': token, 'messages': messages})
+    body = {'replyToken': token, 'messages': messages}
     print(body)
-    req = requests.post(REPLY_EP, data=body, headers=HEADER)
+    req = requests.post(REPLY_EP, data=json.dumps(body, ensure_ascii=False), headers=HEADER)
     if req.status_code == 200:
         pprint(req.json())
     else:
@@ -26,7 +26,7 @@ def reply_text(token, text):
         "type": "text",
         "text": text
     }]
-    reply_message(token, json.dumps(message))
+    reply_message(token, message)
 
 
 CONTINUE = {
