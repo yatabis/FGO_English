@@ -25,7 +25,7 @@ def reply_text(token, text):
         "type": "text",
         "text": text
     }]
-    reply_message(token, message)
+    reply_message(token, json.dumps(message))
 
 
 CONTINUE = {
