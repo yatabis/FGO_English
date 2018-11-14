@@ -1,4 +1,8 @@
 {
   "type": "template",
-  "altText"
+  "altText": "Main Story Carousel",
+  template: {
+    "type": "carousel",
+
+  }
 }
