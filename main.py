@@ -1,4 +1,4 @@
-from bottle import route, run
+from bottle import request, route, run
 import json
 import os
 from pprint import pprint
@@ -51,11 +51,6 @@ def callback():
     events = request.json['events']
     for event in events:
         pprint(event)
-        if event['type'] == 'postback':
-            postback_token = event['replyToken']
-            postback_data = event['postback']['data']
-            if postback_data == 'Continue':
-                reply_message(postback_token, CONFIRM)
 
 
 if __name__ == '__main__':
