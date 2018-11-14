@@ -20,6 +20,14 @@ def reply_message(token, messages):
         pprint(req.json())
 
 
+def reply_text(token, text):
+    message = [{
+        "type": "text",
+        "text": text
+    }]
+    reply_message(token, message)
+
+
 CONTINUE = {
    "type": "postback",
    "label": "Continue",
