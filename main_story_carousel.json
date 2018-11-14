@@ -2,7 +2,31 @@
   {
     "type": "template",
     "altText": "Main Story 1",
-    template: {
+    "template": {
+      "type": "carousel",
+      "columns": [
+        {}
+      ],
+      "imageAspectRatio": "rectangle",
+      "imageSize": "contain"
+    }
+  },
+  {
+    "type": "template",
+    "altText": "Main Story 1.5",
+    "template": {
+      "type": "carousel",
+      "columns": [
+        {}
+      ],
+      "imageAspectRatio": "rectangle",
+      "imageSize": "contain"
+    }
+  },
+  {
+    "type": "template",
+    "altText": "Main Story 2",
+    "template": {
       "type": "carousel",
       "columns": [
         {}
