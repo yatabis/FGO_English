@@ -6,7 +6,9 @@
       "type": "carousel",
       "columns": [
         {}
-      ]
+      ],
+      "imageAspectRatio": "rectangle",
+      "imageSize": "contain"
     }
   }
 ]

@@ -64,11 +64,11 @@ def callback():
         if event['type'] == 'postback':
             postback_data = event['postback']['data']
             if postback_data == "main=1":
-                reply_message(reply_token, "ストーリー第一部の実装をお待ちください。")
+                reply_text(reply_token, "ストーリー第一部の実装をお待ちください。")
             elif postback_data == "main=1.5":
-                reply_message(reply_token, "ストーリー第1.5部の実装をお待ちください。")
+                reply_text(reply_token, "ストーリー第1.5部の実装をお待ちください。")
             elif postback_data == "main=2":
-                reply_message(reply_token, "ストーリー第2部の実装をお待ちください。")
+                reply_text(reply_token, "ストーリー第2部の実装をお待ちください。")
 
 
 if __name__ == '__main__':
