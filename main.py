@@ -114,7 +114,7 @@ def callback():
                     else:
                         print(f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
             elif "main" in postback_data:
-                main = postback_data['main']['name']
+                main = postback_data['main'][0]
                 cursor.execute('select name from `main record` where `main record` = %s', [main])
                 name = cursor.fetchone()['name']
                 cursor.execute(f'check table `{name}`')
