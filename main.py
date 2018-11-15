@@ -1,10 +1,12 @@
 from bottle import request, route, run
 from copy import deepcopy
+from datetime import datetime
 import json
-import pandas as pd
-import pymysql.cursors
+import numpy as np
 import os
+import pandas as pd
 from pprint import pprint
+import pymysql.cursors
 import requests
 from urllib.parse import parse_qs
 
@@ -76,7 +78,18 @@ SECTION_BUTTON = {
 
 
 def mash_talk(token):
-    reply_text(token, "マシュがなんかしゃべる")
+    month = datetime.today().month
+    talk_list = mash[mash['month'] == month]
+    rnd = np.random.randint(0, len(talk_list))
+    message = [{
+        "type": "text",
+        "text": talk_list['text'].values[rnd]
+    }, {
+        "type": "text",
+        "text": talk_list['text_en'].values[rnd]
+    }
+    ]
+    reply_message(token, message)
 
 
 @route('/callback', method='POST')
@@ -138,6 +151,7 @@ if __name__ == '__main__':
     fuyuki = pd.read_sql('select * from fuyuki', connection)
     prologue = pd.read_sql('select * from prologue', connection)
     tables = pd.read_sql('show tables', connection).values
+    mash = pd.read_sql('select * from mash_talk', connection)
     table_list = tables.reshape(len(tables))
     connection.close()
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
