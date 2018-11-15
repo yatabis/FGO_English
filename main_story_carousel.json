@@ -6,63 +6,63 @@
       "type": "image_carousel",
       "columns": [
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/冬木.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/fuyuki.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=F"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/オルレアン.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/orleans.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=1"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/セプテム.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/septem.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=2"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/オケアノス.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/okeanos.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=3"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/ロンドン.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/london.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=4"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/イ・プルーリバス・ウナム.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/e pluribus unam.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=5"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/キャメロット.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/camelot.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=6"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/バビロニア.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/babylonia.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=7"
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/ソロモン.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/solomon.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=FIN"

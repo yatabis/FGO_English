@@ -89,11 +89,8 @@ def callback():
                 chapter = postback_data['chapter'][0]
                 cursor.execute('select name from `main record` where `main record` = %s', [main])
                 part = cursor.fetchone()['name']
-                print(part)
                 cursor.execute(f'select name from `{part}` where chapter = %s', [chapter])
-                print(cursor.statement)
                 name = cursor.fetchone()['name']
-                print(name)
                 cursor.execute(f'check table {name}')
                 check = cursor.fetchone()['Msg_text']
                 if check == "OK":
