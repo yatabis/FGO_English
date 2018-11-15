@@ -24,6 +24,9 @@ with open("LINEObject/main_story_carousel_column.json") as j:
 with open("LINEObject/section_list.json") as j:
     section_list = json.load(j)
 
+with open("LINEObject/section_button.json") as j:
+    section_button = json.load(j)
+
 
 def reply_message(token, messages):
     body = {'replyToken': token, 'messages': messages}
@@ -68,17 +71,6 @@ CONFIRM = {
     }
 }
 
-SECTION_BUTTON = {
-    'type': 'button',
-    'action': {
-        'type': 'postback',
-        'label': 'セクション名',
-        'data': 'section=1'
-    },
-    'height': 'sm',
-    'style': 'secondary'
-}
-
 
 def mash_talk(token):
     month = datetime.today().month
@@ -111,13 +103,14 @@ def callback():
                 part = main_record[main_record['main record'] == float(main)]['name'].item().lower().replace(" ", "_")
                 name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
                 if name in table_list:
-                    section = eval(name)['title']
+                    section = eval(name).to_dict(orient='record')
                     message = deepcopy(section_list)
                     message['contents']['hero'][
                         'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
                     for sec in section:
-                        sec_btn = deepcopy(SECTION_BUTTON)
-                        sec_btn['action']['label'] = sec
+                        sec_btn = deepcopy(section_button)
+                        sec_btn['action']['label'] = sec['title']
+                        sec_btn['action']['data'] = f"main={main}&chapter={chapter}&section={sec['section']}"
                         message['contents']['body']['contents'].append(sec_btn)
                     reply_message(reply_token, [message])
                 else:
