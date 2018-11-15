@@ -97,12 +97,12 @@ def callback():
                     cursor.execute(f'select title from {name}')
                     section = cursor.fetchall()
                     message = deepcopy(section_list)
-                    message['hero'][
+                    message['contents']['hero'][
                         'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
                     for sec in section:
                         sec_btn = deepcopy(SECTION_BUTTON)
                         sec_btn['action']['label'] = sec['title']
-                        message['body']['contents'].append(sec_btn)
+                        message['contents']['body']['contents'].append(sec_btn)
                         reply_message(reply_token, [message])
                 else:
                     if chapter == "F":
