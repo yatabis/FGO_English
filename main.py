@@ -75,6 +75,10 @@ SECTION_BUTTON = {
 }
 
 
+def mash_talk(token):
+    reply_text(token, "マシュがなんかしゃべる")
+
+
 @route('/callback', method='POST')
 def callback():
     events = request.json['events']
@@ -115,7 +119,9 @@ def callback():
                 else:
                     reply_text(reply_token, f"ストーリー第{main}部の実装をお待ちください。")
             else:
-                reply_text(reply_token, "不正なリクエストが送信されました。")
+                reply_text(reply_token, "不正なポストバックが送信されました。")
+        else:
+            mash_talk(reply_token)
 
 
 if __name__ == '__main__':
