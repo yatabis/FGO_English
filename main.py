@@ -126,7 +126,7 @@ if __name__ == '__main__':
         'database': os.environ['DB_NAME'],
         'cursorclass': pymysql.cursors.DictCursor
     }
-    with pymysql.connect(**connection_config) as conn:
+    with pymysql.connect(**connection_config) as connection:
         main_record = pd.read_sql('select * from `main record`', connection)
         observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
         fuyuki = pd.read_sql('select * from fuyuki', connection)
