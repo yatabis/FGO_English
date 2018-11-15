@@ -87,9 +87,9 @@ def callback():
             elif "chapter" in postback_data:
                 main = postback_data['main'][0]
                 chapter = postback_data['chapter'][0]
-                cursor.execute('select name from `main record` where `main record` = %s', [main])
+                cursor.execute('select name from `main record` where `main record` = {main}')
                 part = cursor.fetchone()['name']
-                cursor.execute(f'select name from `{part}` where chapter = %s', [chapter])
+                cursor.execute(f'select name from `{part}` where chapter = "{chapter}"')
                 name = cursor.fetchone()['name']
                 cursor.execute(f'check table {name}')
                 check = cursor.fetchone()['Msg_text']
@@ -112,7 +112,7 @@ def callback():
                         print(f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
             elif "main" in postback_data:
                 main = postback_data['main'][0]
-                cursor.execute('select name from `main record` where `main record` = %s', [main])
+                cursor.execute(f'select name from `main record` where `main record` = {main}')
                 name = cursor.fetchone()['name']
                 cursor.execute(f'check table `{name}`')
                 check = cursor.fetchone()['Msg_text']
