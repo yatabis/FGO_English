@@ -1,6 +1,7 @@
 from bottle import request, route, run
+from copy import deepcopy
 import json
-import mysql.connector
+import pymysql.cursors
 import os
 from pprint import pprint
 import requests
@@ -87,14 +88,14 @@ def callback():
                 main = postback_data['main'][0]
                 chapter = postback_data['chapter'][0]
                 cursor.execute('select name from `main record` where `main record` = %s', [main])
-                part = cursor.fetchone()[0]
+                part = cursor.fetchone()['name']
                 print(part)
                 cursor.execute(f'select name from `{part}` where chapter = %s', [chapter])
                 print(cursor.statement)
-                name = cursor.fetchone()[0]
+                name = cursor.fetchone()['name']
                 print(name)
                 cursor.execute(f'check table {name}')
-                check = cursor.fetchone()[-1]
+                check = cursor.fetchone()['Msg_text']
                 if check == "OK":
                     cursor.execute(f'select title from {name}')
                     section = cursor.fetchall()
@@ -103,7 +104,7 @@ def callback():
                         'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
                     for sec in section:
                         sec_btn = deepcopy(SECTION_BUTTON)
-                        sec_btn['action']['label'] = sec[0]
+                        sec_btn['action']['label'] = sec['title']
                         message['body']['contents'].append(sec_btn)
                 else:
                     if chapter == "F":
@@ -113,11 +114,11 @@ def callback():
                     else:
                         print(f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
             elif "main" in postback_data:
-                main = postback_data['main'][0]
+                main = postback_data['main']['name']
                 cursor.execute('select name from `main record` where `main record` = %s', [main])
-                name = cursor.fetchone()[0]
+                name = cursor.fetchone()['name']
                 cursor.execute(f'check table `{name}`')
-                check = cursor.fetchone()[-1]
+                check = cursor.fetchone()['Msg_text']
                 if check == "OK":
                     reply_message(reply_token, [carousels[main]])
                 else:
@@ -132,7 +133,8 @@ if __name__ == '__main__':
         'password': os.environ['DB_PASS'],
         'host': os.environ['DB_HOST'],
         'database': os.environ['DB_NAME'],
+        'cursorclass': pymysql.cursors.DictCursor
     }
-    connection = mysql.connector.connect(**connection_config)
-    cursor = connection.cursor(dictionary=True)
+    connection = pymysql.connect(**connection_config)
+    cursor = connection.cursor()
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
