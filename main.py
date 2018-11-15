@@ -103,7 +103,7 @@ def callback():
                         sec_btn = deepcopy(SECTION_BUTTON)
                         sec_btn['action']['label'] = sec['title']
                         message['body']['contents'].append(sec_btn)
-                        reply_message(reply_token, message)
+                        reply_message(reply_token, [message])
                 else:
                     if chapter == "F":
                         reply_text(reply_token, f"ストーリー第{main}部序章の実装をお待ちください。")
