@@ -103,13 +103,14 @@ def callback():
                         sec_btn = deepcopy(SECTION_BUTTON)
                         sec_btn['action']['label'] = sec['title']
                         message['body']['contents'].append(sec_btn)
+                        reply_message(reply_token, message)
                 else:
                     if chapter == "F":
-                        print(f"ストーリー第{main}部序章の実装をお待ちください。")
+                        reply_text(reply_token, f"ストーリー第{main}部序章の実装をお待ちください。")
                     elif chapter == "FIN":
-                        print(f"ストーリー第{main}部終章の実装をお待ちください。")
+                        reply_text(reply_token, f"ストーリー第{main}部終章の実装をお待ちください。")
                     else:
-                        print(f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
+                        reply_text(reply_token, f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
             elif "main" in postback_data:
                 main = postback_data['main'][0]
                 cursor.execute(f'select name from `main record` where `main record` = {main}')
