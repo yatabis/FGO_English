@@ -87,7 +87,7 @@ def callback():
             elif "chapter" in postback_data:
                 main = postback_data['main'][0]
                 chapter = postback_data['chapter'][0]
-                cursor.execute('select name from `main record` where `main record` = {main}')
+                cursor.execute(f'select name from `main record` where `main record` = {main}')
                 part = cursor.fetchone()['name']
                 cursor.execute(f'select name from `{part}` where chapter = "{chapter}"')
                 name = cursor.fetchone()['name']
