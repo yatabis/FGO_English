@@ -82,48 +82,39 @@ def callback():
         pprint(event)
         if event['type'] == 'postback':
             postback_data = parse_qs(event['postback']['data'])
-            with connection.cursor() as cursor:
-                if "section" in postback_data:
-                    pass
-                elif "chapter" in postback_data:
-                    main = postback_data['main'][0]
-                    chapter = postback_data['chapter'][0]
-                    cursor.execute(f'select name from `main record` where `main record` = {main}')
-                    part = cursor.fetchone()['name']
-                    cursor.execute(f'select name from `{part}` where chapter = "{chapter}"')
-                    name = cursor.fetchone()['name']
-                    cursor.execute(f'check table {name}')
-                    check = cursor.fetchone()['Msg_text']
-                    if check == "OK":
-                        cursor.execute(f'select title from {name}')
-                        section = cursor.fetchall()
-                        message = deepcopy(section_list)
-                        message['contents']['hero'][
-                            'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
-                        for sec in section:
-                            sec_btn = deepcopy(SECTION_BUTTON)
-                            sec_btn['action']['label'] = sec['title']
-                            message['contents']['body']['contents'].append(sec_btn)
-                            reply_message(reply_token, [message])
-                    else:
-                        if chapter == "F":
-                            reply_text(reply_token, f"ストーリー第{main}部序章の実装をお待ちください。")
-                        elif chapter == "FIN":
-                            reply_text(reply_token, f"ストーリー第{main}部終章の実装をお待ちください。")
-                        else:
-                            reply_text(reply_token, f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
-                elif "main" in postback_data:
-                    main = postback_data['main'][0]
-                    cursor.execute(f'select name from `main record` where `main record` = {main}')
-                    name = cursor.fetchone()['name']
-                    cursor.execute(f'check table `{name}`')
-                    check = cursor.fetchone()['Msg_text']
-                    if check == "OK":
-                        reply_message(reply_token, [carousels[main]])
-                    else:
-                        reply_text(reply_token, f"ストーリー第{main}部の実装をお待ちください。")
+            if "section" in postback_data:
+                pass
+            elif "chapter" in postback_data:
+                main = postback_data['main'][0]
+                chapter = postback_data['chapter'][0]
+                part = main_record[main_record['main record'] == float(main)]['name'].item().lower().replace(" ", "_")
+                name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
+                if name in table_list:
+                    section = eval(name)['title']
+                    message = deepcopy(section_list)
+                    message['contents']['hero'][
+                        'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
+                    for sec in section:
+                        sec_btn = deepcopy(SECTION_BUTTON)
+                        sec_btn['action']['label'] = sec
+                        message['contents']['body']['contents'].append(sec_btn)
+                    reply_message(reply_token, [message])
                 else:
-                    reply_text(reply_token, "不正なリクエストが送信されました。")
+                    if chapter == "F":
+                        reply_text(reply_token, f"ストーリー第{main}部序章の実装をお待ちください。")
+                    elif chapter == "FIN":
+                        reply_text(reply_token, f"ストーリー第{main}部終章の実装をお待ちください。")
+                    else:
+                        reply_text(reply_token, f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
+            elif "main" in postback_data:
+                main = postback_data['main'][0]
+                name = main_record[main_record['main record'] == float(main)]['name'].item().lower()
+                if name in table_list:
+                    reply_message(reply_token, [carousels[main]])
+                else:
+                    reply_text(reply_token, f"ストーリー第{main}部の実装をお待ちください。")
+            else:
+                reply_text(reply_token, "不正なリクエストが送信されました。")
 
 
 if __name__ == '__main__':
@@ -134,5 +125,11 @@ if __name__ == '__main__':
         'database': os.environ['DB_NAME'],
         'cursorclass': pymysql.cursors.DictCursor
     }
-    connection = pymysql.connect(**connection_config)
+    with pymysql.connect(**connection_config) as conn:
+        main_record = pd.read_sql('select * from `main record`', connection)
+        observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
+        fuyuki = pd.read_sql('select * from fuyuki', connection)
+        prologue = pd.read_sql('select * from prologue', connection)
+        tables = pd.read_sql('show tables', connection).values
+        table_list = tables.reshape(len(tables))
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
