@@ -126,11 +126,12 @@ if __name__ == '__main__':
         'database': os.environ['DB_NAME'],
         'cursorclass': pymysql.cursors.DictCursor
     }
-    with pymysql.connect(**connection_config) as connection:
-        main_record = pd.read_sql('select * from `main record`', connection)
-        observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
-        fuyuki = pd.read_sql('select * from fuyuki', connection)
-        prologue = pd.read_sql('select * from prologue', connection)
-        tables = pd.read_sql('show tables', connection).values
-        table_list = tables.reshape(len(tables))
+    connection = pymysql.connect(**connection_config)
+    main_record = pd.read_sql('select * from `main record`', connection)
+    observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
+    fuyuki = pd.read_sql('select * from fuyuki', connection)
+    prologue = pd.read_sql('select * from prologue', connection)
+    tables = pd.read_sql('show tables', connection).values
+    table_list = tables.reshape(len(tables))
+    connection.close()
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
