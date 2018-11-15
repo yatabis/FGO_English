@@ -41,7 +41,7 @@
           }
         },
         {
-          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/e pluribus unam.png",
+          "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/e_pluribus_unam.png",
           "action": {
             "type": "postback",
             "data": "main=1&chapter=5"
