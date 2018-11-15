@@ -1,18 +1,21 @@
 {
-  "type": "bubble",
-  "hero": {
-    "type": "image",
-    "url": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/.png",
-    "size": "full",
-    "aspectRatio": "20:13",
-    "aspectMode": "cover"
-  },
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-
-    ],
-    "spacing": "sm"
+  "type": "flex",
+  "altText": "section list",
+  "contents": {
+    "type": "bubble",
+    "hero": {
+      "type": "image",
+      "url": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/.png",
+      "size": "full",
+      "aspectRatio": "20:13",
+      "aspectMode": "cover"
+    },
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+      ],
+      "spacing": "sm"
+    }
   }
 }
