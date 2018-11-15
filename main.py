@@ -15,10 +15,13 @@ HEADER = {'Content-Type': 'application/json',
           'Authorization': f"Bearer {CAT}"}
 REPLY_EP = "https://api.line.me/v2/bot/message/reply"
 
-with open("main_story_carousel.json") as j:
-    carousels = json.load(j)
+with open("LINEObject/main_story_carousel.json") as j:
+    carousel = json.load(j)
 
-with open("section_list.json") as j:
+with open("LINEObject/main_story_carousel_column.json") as j:
+    carousel_column = json.load(j)
+
+with open("LINEObject/section_list.json") as j:
     section_list = json.load(j)
 
 
@@ -128,7 +131,16 @@ def callback():
                 main = postback_data['main'][0]
                 name = main_record[main_record['main record'] == float(main)]['name'].item().lower()
                 if name in table_list:
-                    reply_message(reply_token, [carousels[main]])
+                    part = deepcopy(carousel)
+                    part['altText'] = f"Main Story {main}"
+                    chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
+                    for chap in chapter:
+                        column = deepcopy(carousel_column)
+                        column['imageUrl'] = \
+                            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
+                        column['action']['data'] = f"main={main}&chapter={chap['chapter']}"
+                        part['template']['columns'].append(column)
+                    reply_message(reply_token, [part])
                 else:
                     reply_text(reply_token, f"ストーリー第{main}部の実装をお待ちください。")
             else:

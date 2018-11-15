@@ -1,0 +1,7 @@
+{
+  "imageUrl": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/png",
+  "action": {
+    "type": "postback",
+    "data": "main =0&chapter=0"
+  }
+}

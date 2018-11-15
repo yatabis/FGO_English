@@ -1,0 +1,9 @@
+{
+  "type": "template",
+  "altText": "Main Story",
+  "template": {
+    "type": "image_carousel",
+    "columns": [
+    ]
+  }
+}
