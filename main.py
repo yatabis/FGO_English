@@ -73,8 +73,7 @@ def get_name(part=None, chapter=None, section=None):
     if section:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
-        print(eval(chapter)[eval(chapter)['section'] == int(section)])
-        name = eval(chapter)[eval(chapter)['section'] == int(section)]['title'].item().lower()
+        name = eval(chapter)[eval(chapter)['section'] == section]['title'].item().lower()
     elif chapter:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
@@ -121,7 +120,6 @@ def create_part(part):
     chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
     for chap in chapter:
         part_column = deepcopy(main_record_carousel_column)
-        print(chap)
         part_column['imageUrl'] = \
             f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
@@ -140,14 +138,14 @@ def callback():
             if "section" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
-                section = postback_data['section'][0]
+                section = int(postback_data['section'][0])
                 line = postback_data['list'][0] if 'list' in postback_data else 0
                 name = get_name(part, chapter, section)
                 if name in table_list:
                     text_line = load_text_line(part, chapter, section, line)
                     reply_message(reply_token, text_line)
                 else:
-                    if section == 0:
+                    if section == '0':
                         if chapter == 0:
                             reply_text(reply_token, f"ストーリー第{part}部第序章プロローグの実装をお待ちください。")
                         else:
