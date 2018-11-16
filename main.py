@@ -73,7 +73,8 @@ def get_name(part=None, chapter=None, section=None):
     if section:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
-        name = eval(chapter)[eval(chapter)['section'] == int(section)]['name'].item().lower()
+        print(eval(chapter)[eval(chapter)['section'] == int(section)])
+        name = eval(chapter)[eval(chapter)['section'] == int(section)]['title'].item().lower()
     elif chapter:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
@@ -120,6 +121,7 @@ def create_part(part):
     chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
     for chap in chapter:
         part_column = deepcopy(main_record_carousel_column)
+        print(chap)
         part_column['imageUrl'] = \
             f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
