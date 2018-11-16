@@ -69,7 +69,7 @@ def mash_talk(token):
     reply_message(token, message)
 
 
-def get_name(part=None, chapter=None, section=None):
+def get_name(part, chapter=None, section=None):
     if section is not None:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
@@ -77,10 +77,8 @@ def get_name(part=None, chapter=None, section=None):
     elif chapter is not None:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
-    elif part is not None:
-        name = main_record[main_record['main record'] == float(part)]['name'].item().lower()
     else:
-        name = "Value Error."
+        name = main_record[main_record['main record'] == float(part)]['name'].item().lower()
     return name
 
 
@@ -130,6 +128,25 @@ def create_part(part):
     return part_carousel
 
 
+def unimplemented(part, chapter=None, section=None):
+    text = f"ストーリー第{part}部"
+    if chapter == '0':
+        text += "序章"
+    elif chapter == 'FIN':
+        text += "終章"
+    elif chapter is not None:
+        text += f"第{chapter}章"
+    if section == 0:
+        if chapter == '0':
+            text += "プロローグ"
+        elif chapter is not None:
+            text += "アバンタイトル"
+    elif section is not None:
+        text += f"第{section}節"
+    text += "の実装をお待ちください。"
+    return text
+
+
 @route('/callback', method='POST')
 def callback():
     events = request.json['events']
@@ -148,13 +165,8 @@ def callback():
                     text_line = load_text_line(part, chapter, section, line)
                     reply_message(reply_token, text_line)
                 else:
-                    if section == '0':
-                        if chapter == 0:
-                            reply_text(reply_token, f"ストーリー第{part}部第序章プロローグの実装をお待ちください。")
-                        else:
-                            reply_text(reply_token, f"ストーリー第{part}部第{chapter}章アバンタイトルの実装をお待ちください。")
-                    else:
-                        reply_text(reply_token, f"ストーリー第{part}部第{chapter}章第{section}節の実装をお待ちください。")
+                    unimplemented_text = unimplemented(part, chapter, section)
+                    reply_text(reply_token, unimplemented_text)
             elif "chapter" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
@@ -163,12 +175,8 @@ def callback():
                     section_list = create_chapter(part, chapter)
                     reply_message(reply_token, [section_list])
                 else:
-                    if chapter == "0":
-                        reply_text(reply_token, f"ストーリー第{part}部序章の実装をお待ちください。")
-                    elif chapter == "FIN":
-                        reply_text(reply_token, f"ストーリー第{part}部終章の実装をお待ちください。")
-                    else:
-                        reply_text(reply_token, f"ストーリー第{part}部第{chapter}章の実装をお待ちください。")
+                    unimplemented_text = unimplemented(part, chapter)
+                    reply_text(reply_token, unimplemented_text)
             elif 'part' in postback_data:
                 part = postback_data['part'][0]
                 name = get_name(part)
@@ -176,7 +184,8 @@ def callback():
                     part_carousel = create_part(part)
                     reply_message(reply_token, [part_carousel])
                 else:
-                    reply_text(reply_token, f"ストーリー第{part}部の実装をお待ちください。")
+                    unimplemented_text = unimplemented(part)
+                    reply_text(reply_token, unimplemented_text)
             else:
                 reply_text(reply_token, "不正なポストバックが送信されました。")
         else:
