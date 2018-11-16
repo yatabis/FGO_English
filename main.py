@@ -94,7 +94,7 @@ def load_text_line(part, chapter, section, line):
     text_message['body']['contents'][0]['text'] = text
     text_message['body']['contents'][1]['contents'][0]['action']['data'] = f"part={part}&chapter={chapter}"
     text_message['body']['contents'][1]['contents'][1]['action'][
-        'data'] = f"part={part}&chapter={chapter}&section{section}&line={line + 1}"
+        'data'] = f"part={part}&chapter={chapter}&section={section}&line={line + 1}"
     text_unit[0]['text'] = speaker
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[1]['contents'] = text_message
@@ -124,7 +124,7 @@ def create_part(part):
     for chap in chapter:
         part_column = deepcopy(main_record_carousel_column)
         part_column['imageUrl'] = \
-            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
+            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
         part_carousel['template']['columns'].append(part_column)
     return part_carousel
