@@ -91,18 +91,23 @@ def load_text_line(part, chapter, section, line):
     size = record['size']
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
+    text_message_en = deepcopy(story_text_message)
     text_message['body']['contents'][0]['text'] = text
+    text_message_en['body']['contents'][0]['text'] = text_en
     text_message['body']['contents'][0]['size'] = size
+    text_message_en['body']['contents'][0]['size'] = size
     if speaker == "アナウンス":
         text_message['body']['contents'][0]['color'] = "#00dddd"
+        text_message_en['body']['contents'][0]['color'] = "#00dddd"
     text_message['body']['contents'][0]['action'][
+        'data'] = f"part={part}&chapter={chapter}&section={section}&line={line + 1}"
+    text_message_en['body']['contents'][0]['action'][
         'data'] = f"part={part}&chapter={chapter}&section={section}&line={line + 1}"
     text_unit[0]['text'] = speaker
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
-    text_unit[1]['contents'] = text_message
-    text_message['body']['contents'][0]['text'] = text_en
     text_unit[2]['altText'] = f"Story {chapter}-{section}: {line}"
-    text_unit[2]['contents'] = text_message
+    text_unit[1]['contents'] = text_message
+    text_unit[2]['contents'] = text_message_en
     return text_unit
 
 
