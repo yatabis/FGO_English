@@ -1,0 +1,40 @@
+{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "horizontal",
+    "contents": [
+      {
+        "type": "text",
+        "text": "text"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "postback",
+              "label": "Skip",
+              "data": "main=0&chapter=0"
+            },
+            "height": "sm",
+            "gravity": "bottom"
+          },
+          {
+            "type": "button",
+            "action": {
+              "type": "postback",
+              "label": "▼",
+              "data": "main=0&chapter=0section=0&line=0"
+            },
+            "height": "sm",
+            "gravity": "bottom"
+          }
+        ],
+        "flex": 0
+      }
+    ]
+  }
+}

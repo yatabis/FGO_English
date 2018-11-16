@@ -15,17 +15,23 @@ HEADER = {'Content-Type': 'application/json',
           'Authorization': f"Bearer {CAT}"}
 REPLY_EP = "https://api.line.me/v2/bot/message/reply"
 
-with open("LINEObject/main_story_carousel.json") as j:
-    carousel = json.load(j)
+with open("LINEObject/main_record_carousel.json") as j:
+    main_record_carousel = json.load(j)
 
-with open("LINEObject/main_story_carousel_column.json") as j:
-    carousel_column = json.load(j)
+with open("LINEObject/main_record_carousel_column.json") as j:
+    main_record_carousel_column = json.load(j)
 
-with open("LINEObject/section_list.json") as j:
-    section_list = json.load(j)
+with open("LINEObject/chapter_container.json") as j:
+    chapter_container = json.load(j)
 
-with open("LINEObject/section_button.json") as j:
-    section_button = json.load(j)
+with open("LINEObject/chapter_contents.json") as j:
+    chapter_contents = json.load(j)
+
+with open("LINEObject/story_text_unit.json") as j:
+    story_text_unit = json.load(j)
+
+with open("LINEObject/story_text_message.json") as j:
+    story_text_message = json.load(j)
 
 
 def reply_message(token, messages):
@@ -46,45 +52,79 @@ def reply_text(token, text):
     reply_message(token, message)
 
 
-CONTINUE = {
-    "type": "postback",
-    "label": "Continue",
-    "data": "action=continue",
-}
-
-SKIP = {
-    "type": "postback",
-    "label": "Skip",
-    "data": "action=skip",
-}
-
-CONFIRM = {
-    "type": "template",
-    "altText": "Story text",
-    "template": {
-        "type": "confirm",
-        "text": "text",
-        "actions": [
-            CONTINUE,
-            SKIP
-        ]
-    }
-}
-
-
 def mash_talk(token):
     month = datetime.today().month
     talk_list = mash[mash['month'] == month]
     rnd = np.random.randint(0, len(talk_list))
     message = [{
         "type": "text",
+        "text": "マシュ (Mash)"
+    }, {
+        "type": "text",
         "text": talk_list['text'].values[rnd]
     }, {
         "type": "text",
         "text": talk_list['text_en'].values[rnd]
-    }
-    ]
+    }]
     reply_message(token, message)
+
+
+def get_name(part=None, chapter=None, section=None):
+    if section:
+        part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
+        chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
+        name = eval(chapter)[eval(chapter)['section'] == section]['name'].item().lower()
+    elif chapter:
+        part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
+        name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
+    elif part:
+        name = main_record[main_record['main record'] == float(part)]['name'].item().lower()
+    else:
+        name = "Value Error."
+    return name
+
+
+def load_text_line(part, chapter, section, line):
+    name = get_name(part, chapter, section)
+    record = eval(name)[eval(name)['line'] == line]
+    speaker = record['speaker'].item()
+    text = record['text'].item()
+    text_unit = deepcopy(story_text_unit)
+    text_message = deepcopy(story_text_message)
+    text_message['body']['contents'][0]['text'] = text
+    text_unit[0]['text'] = speaker
+    text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
+    text_unit[1]['contents'] = text_message
+    return text_unit
+
+
+def create_chapter(part, chapter):
+    name = get_name(part, chapter)
+    section_list = deepcopy(chapter_container)
+    section_list['altText'] = f"Chapter {chapter}"
+    section_list['contents']['hero'][
+        'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
+    section = eval(name).to_dict(orient='record')
+    for sec in section:
+        section_button = deepcopy(chapter_contents)
+        section_button['action']['label'] = sec['title']
+        section_button['action']['data'] = f"part={part}&chapter={chapter}&section={sec['section']}"
+        section_list['contents']['body']['contents'].append(section_button)
+    return section_list
+
+
+def create_part(part):
+    name = get_name(part)
+    part_carousel = deepcopy(main_record_carousel)
+    part_carousel['altText'] = f"Main Record {part}"
+    chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
+    for chap in chapter:
+        part_column = deepcopy(carousel_column)
+        part_column['imageUrl'] = \
+            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
+        part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
+        part_carousel['template']['columns'].append(column)
+    return part_carousel
 
 
 @route('/callback', method='POST')
@@ -96,46 +136,44 @@ def callback():
         if event['type'] == 'postback':
             postback_data = parse_qs(event['postback']['data'])
             if "section" in postback_data:
-                pass
-            elif "chapter" in postback_data:
-                main = postback_data['main'][0]
+                part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
-                part = main_record[main_record['main record'] == float(main)]['name'].item().lower().replace(" ", "_")
-                name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
+                section = postback_data['section'][0]
+                line = postback_data.get('line', 0)[0]
+                name = get_name(part, chapter, section)
                 if name in table_list:
-                    section = eval(name).to_dict(orient='record')
-                    message = deepcopy(section_list)
-                    message['contents']['hero'][
-                        'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
-                    for sec in section:
-                        sec_btn = deepcopy(section_button)
-                        sec_btn['action']['label'] = sec['title']
-                        sec_btn['action']['data'] = f"main={main}&chapter={chapter}&section={sec['section']}"
-                        message['contents']['body']['contents'].append(sec_btn)
-                    reply_message(reply_token, [message])
+                    text_line = load_text_line(part, chapter, section, line)
+                    reply_message(reply_token, text_line)
                 else:
-                    if chapter == "F":
-                        reply_text(reply_token, f"ストーリー第{main}部序章の実装をお待ちください。")
-                    elif chapter == "FIN":
-                        reply_text(reply_token, f"ストーリー第{main}部終章の実装をお待ちください。")
+                    if section == 0:
+                        if chapter == 0:
+                            reply_text(reply_token, f"ストーリー第{part}部第序章プロローグの実装をお待ちください。")
+                        else:
+                            reply_text(reply_token, f"ストーリー第{part}部第{chapter}章アバンタイトルの実装をお待ちください。")
                     else:
-                        reply_text(reply_token, f"ストーリー第{main}部第{chapter}章の実装をお待ちください。")
-            elif "main" in postback_data:
-                main = postback_data['main'][0]
-                name = main_record[main_record['main record'] == float(main)]['name'].item().lower()
+                        reply_text(reply_token, f"ストーリー第{part}部第{chapter}章第{section}節の実装をお待ちください。")
+            elif "chapter" in postback_data:
+                part = postback_data['part'][0]
+                chapter = postback_data['chapter'][0]
+                name = get_name(part, chapter)
                 if name in table_list:
-                    part = deepcopy(carousel)
-                    part['altText'] = f"Main Story {main}"
-                    chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
-                    for chap in chapter:
-                        column = deepcopy(carousel_column)
-                        column['imageUrl'] = \
-                            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
-                        column['action']['data'] = f"main={main}&chapter={chap['chapter']}"
-                        part['template']['columns'].append(column)
-                    reply_message(reply_token, [part])
+                    section_list = create_chapter(part, chapter)
+                    reply_message(reply_token, [section_list])
                 else:
-                    reply_text(reply_token, f"ストーリー第{main}部の実装をお待ちください。")
+                    if chapter == "0":
+                        reply_text(reply_token, f"ストーリー第{part}部序章の実装をお待ちください。")
+                    elif chapter == "FIN":
+                        reply_text(reply_token, f"ストーリー第{part}部終章の実装をお待ちください。")
+                    else:
+                        reply_text(reply_token, f"ストーリー第{part}部第{chapter}章の実装をお待ちください。")
+            elif 'part' in postback_data:
+                part = postback_data['part'][0]
+                name = get_name(part)
+                if name in table_list:
+                    part_carousel = create_part(part)
+                    reply_message(reply_token, [part_carousel])
+                else:
+                    reply_text(reply_token, f"ストーリー第{part}部の実装をお待ちください。")
             else:
                 reply_text(reply_token, "不正なポストバックが送信されました。")
         else:

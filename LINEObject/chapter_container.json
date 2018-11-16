@@ -1,11 +1,11 @@
 {
   "type": "flex",
-  "altText": "section list",
+  "altText": "Chapter",
   "contents": {
     "type": "bubble",
     "hero": {
       "type": "image",
-      "url": "https://raw.githubusercontent.com/yatabis/FGO_English/master/images/.png",
+      "url": "image url",
       "size": "full",
       "aspectRatio": "20:13",
       "aspectMode": "cover"
