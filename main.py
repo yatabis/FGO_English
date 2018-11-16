@@ -90,13 +90,13 @@ def load_text_line(part, chapter, section, line):
     print(eval(name)[eval(name)['line'] == line])
     record = eval(name)[eval(name)['line'] == line].to_dict()
     print(record)
-    speaker = record['speaker']
-    text = record['text']
+    speaker = record['speaker']['0']
+    text = record['text']['0']
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message['body']['contents'][0]['text'] = text
-    text_message['body']['contents'][1]['contents']['action']['data'] = f"part={part}&chapter={chapter}"
-    text_message['body']['contents'][2]['contents']['action'][
+    text_message['body']['contents'][1]['contents'][0]['action']['data'] = f"part={part}&chapter={chapter}"
+    text_message['body']['contents'][1]['contents'][1]['action'][
         'data'] = f"part={part}&chapter={chapter}&section{section}&line={line + 1}"
     text_unit[0]['text'] = speaker
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
