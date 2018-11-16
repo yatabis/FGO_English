@@ -98,7 +98,7 @@ def load_text_line(part, chapter, section, line):
     text_unit[0]['text'] = speaker
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[1]['contents'] = text_message
-    return text_unit
+    return text_unit[:2]
 
 
 def create_chapter(part, chapter):
