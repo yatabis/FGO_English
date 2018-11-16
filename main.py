@@ -123,7 +123,7 @@ def create_part(part):
         part_column['imageUrl'] = \
             f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
-        part_carousel['template']['columns'].append(column)
+        part_carousel['template']['columns'].append(part_column)
     return part_carousel
 
 
