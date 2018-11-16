@@ -86,7 +86,7 @@ def get_name(part=None, chapter=None, section=None):
 
 def load_text_line(part, chapter, section, line):
     name = get_name(part, chapter, section)
-    record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')
+    record = eval(name)[eval(name)['line'] == line].to_dict()
     print(record)
     speaker = record['speaker']
     text = record['text']
