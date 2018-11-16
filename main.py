@@ -119,7 +119,7 @@ def create_part(part):
     part_carousel['altText'] = f"Main Record {part}"
     chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
     for chap in chapter:
-        part_column = deepcopy(carousel_column)
+        part_column = deepcopy(main_record_carousel_column)
         part_column['imageUrl'] = \
             f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png'"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
