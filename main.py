@@ -73,7 +73,7 @@ def get_name(part=None, chapter=None, section=None):
     if section:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
-        name = eval(chapter)[eval(chapter)['section'] == section]['title'].item().lower()
+        name = eval(chapter)[eval(chapter)['section'] == section]['table_title'].item().lower()
     elif chapter:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
