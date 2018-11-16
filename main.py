@@ -101,6 +101,7 @@ def load_text_line(part, chapter, section, line):
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[1]['contents'] = text_message
     text_message['body']['contents'][0]['text'] = text_en
+    text_unit[2]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[2]['contents'] = text_message
     return text_unit
 
