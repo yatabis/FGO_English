@@ -70,14 +70,14 @@ def mash_talk(token):
 
 
 def get_name(part=None, chapter=None, section=None):
-    if section:
+    if section is not None:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
         name = eval(chapter)[eval(chapter)['section'] == section]['table_title'].item().lower()
-    elif chapter:
+    elif chapter is not None:
         part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
         name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
-    elif part:
+    elif part is not None:
         name = main_record[main_record['main record'] == float(part)]['name'].item().lower()
     else:
         name = "Value Error."
