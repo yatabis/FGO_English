@@ -86,6 +86,8 @@ def get_name(part=None, chapter=None, section=None):
 
 def load_text_line(part, chapter, section, line):
     name = get_name(part, chapter, section)
+    print(line, type(line))
+    print(eval(name)[eval(name)['line'] == line])
     record = eval(name)[eval(name)['line'] == line].to_dict()
     print(record)
     speaker = record['speaker']
@@ -93,6 +95,9 @@ def load_text_line(part, chapter, section, line):
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message['body']['contents'][0]['text'] = text
+    text_message['body']['contents'][1]['contents']['action']['data'] = f"part={part}&chapter={chapter}"
+    text_message['body']['contents'][2]['contents']['action'][
+        'data'] = f"part={part}&chapter={chapter}&section{section}&line={line + 1}"
     text_unit[0]['text'] = speaker
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[1]['contents'] = text_message
@@ -140,7 +145,7 @@ def callback():
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
                 section = int(postback_data['section'][0])
-                line = postback_data['list'][0] if 'list' in postback_data else 0
+                line = int(postback_data['list'][0]) if 'list' in postback_data else 1
                 name = get_name(part, chapter, section)
                 if name in table_list:
                     text_line = load_text_line(part, chapter, section, line)

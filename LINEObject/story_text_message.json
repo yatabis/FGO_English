@@ -17,7 +17,7 @@
             "action": {
               "type": "postback",
               "label": "Skip",
-              "data": "main=0&chapter=0"
+              "data": "part=0&chapter=0"
             },
             "height": "sm",
             "gravity": "bottom"
@@ -27,7 +27,7 @@
             "action": {
               "type": "postback",
               "label": "▼",
-              "data": "main=0&chapter=0section=0&line=0"
+              "data": "part=0&chapter=0section=0&line=0"
             },
             "height": "sm",
             "gravity": "bottom"
