@@ -86,11 +86,10 @@ def get_name(part=None, chapter=None, section=None):
 
 def load_text_line(part, chapter, section, line):
     name = get_name(part, chapter, section)
-    print(name)
-    print(eval(name))
-    record = eval(name)[eval(name)['line'] == line]
-    speaker = record['speaker'].item()
-    text = record['text'].item()
+    record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')
+    print(record)
+    speaker = record['speaker']
+    text = record['text']
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message['body']['contents'][0]['text'] = text
