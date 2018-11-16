@@ -142,7 +142,7 @@ def callback():
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
                 section = int(postback_data['section'][0])
-                line = int(postback_data['list'][0]) if 'list' in postback_data else 1
+                line = int(postback_data['line'][0]) if 'line' in postback_data else 1
                 name = get_name(part, chapter, section)
                 if name in table_list:
                     text_line = load_text_line(part, chapter, section, line)
