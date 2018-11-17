@@ -33,6 +33,12 @@ with open("LINEObject/story_text_unit.json") as j:
 with open("LINEObject/story_text_message.json") as j:
     story_text_message = json.load(j)
 
+with open("LINEObject/option_container.json") as j:
+    option_container = json.load(j)
+
+with open("LINEObject/option_choice.json") as j:
+    option_choice = json.load(j)
+
 
 def reply_message(token, messages):
     body = {'replyToken': token, 'messages': messages}
@@ -84,29 +90,15 @@ def get_name(part, chapter=None, section=None):
 
 def create_option_text(part, chapter, section, line, option):
     name = get_name(part, chapter, section)
-    line1 = get_next_record_line(eval(name), line, 1)
-    line2 = get_next_record_line(eval(name), line, 2)
-    message = {
-        "type": "template",
-        "altText": f"option {option}",
-        "template": {
-            "type": "confirm",
-            "text": f"オプション{option}",
-            "actions": [
-                {
-                    "type": "postback",
-                    "label": "choice 1",
-                    "data": f"part={part}&chapter={chapter}&section={section}&line={line1}"
-                },
-                {
-                    "type": "postback",
-                    "label": "choice 2",
-                    "data": f"part={part}&chapter={chapter}&section={section}&line={line2}"
-                }
-            ]
-        }
-    }
-    return message
+    choices = [c for c in option_list.to_dict(orient='split')['data'][id] if isinstance(c, str)]
+    choice_list = deepcopy(option_container)
+    for c in range(len(choices)):
+        choice_btn = deepcopy(option_choice)
+        choice_btn['action']['label'] = choices[c]
+        next_line = get_next_record_line(eval(name), line, c + 1)
+        choice_btn['action']['data'] = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
+        choice_list['body']['contents'].append(choice_btn)
+    return choice_list
 
 
 def get_speaker(record):
@@ -131,7 +123,7 @@ def get_next_record_line(df, line, flag):
         line += 1
         next_record = df[df['line'] == line].to_dict(orient='record')[0]
         next_flag = next_record['flag'] if not np.isnan(next_record['flag']) else None
-        loop = next_flag not in {flag, 0, None}
+        loop = next_flag not in {flag, 0, -1, None}
     return line
 
 
@@ -294,8 +286,9 @@ if __name__ == '__main__':
     observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
     fuyuki = pd.read_sql('select * from fuyuki', connection)
     prologue = pd.read_sql('select * from prologue', connection)
-    tables = pd.read_sql('show tables', connection).values
+    option_list = pd.read_sql('select * from option_list', connection)
     mash = pd.read_sql('select * from mash_talk', connection)
+    tables = pd.read_sql('show tables', connection).values
     table_list = tables.reshape(len(tables))
     connection.close()
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))

@@ -1,0 +1,11 @@
+{
+  "type": "button",
+  "action": {
+    "type": "postback",
+    "label": "choice",
+    "data": "part=0&chapter=0section=0&line=0"
+  },
+  "height": "sm",
+  "style": "primary",
+  "color": "#000000"
+}
