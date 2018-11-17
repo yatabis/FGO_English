@@ -244,7 +244,6 @@ def callback():
                 option = postback_data['option'][0]
                 option_text = create_option_text(part, chapter, section, line, option)
                 reply_message(reply_token, option_text)
-                reply_message(reply_token, message)
             if "section" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
