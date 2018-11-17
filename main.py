@@ -109,7 +109,7 @@ def create_option_text(part, chapter, section, line, option):
 def get_speaker(record):
     speaker = record['speaker']
     speaker_en = record['speaker_en']
-    speaker_text = f"{speaker} ({speaker_en})" if not speaker_en else f"{speaker}" if not speaker else None
+    speaker_text = f"{speaker} ({speaker_en})" if speaker_en else f"{speaker}" if speaker else None
     return speaker_text
 
 
