@@ -97,7 +97,7 @@ def create_option_text(part, chapter, section, line, option):
         choice_btn['action']['label'] = choices[c]
         next_line = get_next_record_line(eval(name), line, c + 1)
         choice_btn['action']['data'] = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
-        choice_list['body']['contents'].append(choice_btn)
+        choice_list['contents']['body']['contents'].append(choice_btn)
     return choice_list
 
 
