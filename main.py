@@ -148,8 +148,8 @@ def load_text_line(part, chapter, section, line):
     text_en = record['text_en']
     size = record['size'] if not record['size'] == '' else None
     color = get_font_color(speaker)
-    flag = record['flag'] if not np.isnan(record['flag']) else None
-    option = record['option'] if not np.isnan(record['option']) else None
+    flag = int(record['flag']) if not np.isnan(record['flag']) else None
+    option = int(record['option']) if not np.isnan(record['option']) else None
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message_en = deepcopy(story_text_message)
