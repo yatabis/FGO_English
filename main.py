@@ -109,7 +109,7 @@ def create_option_text(part, chapter, section, line, option):
 def get_speaker(record):
     speaker = record['speaker']
     speaker_en = record['speaker_en']
-    speaker_text = f"{speaker} ({speaker_en})" if not speaker_en == '' else f"{speaker}" if not speaker == '' else None
+    speaker_text = f"{speaker} ({speaker_en})" if not speaker_en else f"{speaker}" if not speaker else None
     return speaker_text
 
 
@@ -128,7 +128,7 @@ def get_next_record_line(df, line, flag):
         line += 1
         next_record = df[df['line'] == line].to_dict(orient='record')[0]
         next_flag = next_record['flag'] if not np.isnan(next_record['flag']) else None
-        loop = next_flag in {flag, 0, None}
+        loop = next_flag not in {flag, 0, None}
     return line
 
 
