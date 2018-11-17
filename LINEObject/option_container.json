@@ -1,15 +1,19 @@
 {
-  "type": "bubble",
-  "body": {
-    "type": "box",
-    "layout": "vertical",
-    "contents": [
-    ],
-    "spacing": "lg"
-  },
-  "styles": {
+  "type": "flex",
+  "altText": "Option",
+  "contents": {
+    "type": "bubble",
     "body": {
-      "backgroundColor": "#223388"
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+      ],
+      "spacing": "lg"
+    },
+    "styles": {
+      "body": {
+        "backgroundColor": "#223388"
+      }
     }
   }
 }
