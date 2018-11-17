@@ -127,8 +127,7 @@ def get_next_record_line(df, line, flag):
     while loop:
         line += 1
         next_record = df[df['line'] == line].to_dict(orient='record')[0]
-        if next_record['flag'] is None or next_record['flag'] == flag:
-            loop = False
+        loop = next_record['flag'] in {flag, 0, None}
     return line
 
 
