@@ -89,7 +89,8 @@ def load_text_line(part, chapter, section, line):
     speaker = f"{record['speaker']} ({record['speaker_en']})"
     text = record['text']
     text_en = record['text_en']
-    flag = record['flag']
+    flag = record['flag'] if not np.isnan(record['flag']) else None
+    option = record['option'] if not np.isnan(record['option']) else None
     # size = record['size']
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
@@ -103,6 +104,8 @@ def load_text_line(part, chapter, section, line):
         text_message_en['body']['contents'][0]['color'] = "#00dddd"
     if flag == -1:
         action = f"part={part}&chapter={chapter}"
+    elif option is not None:
+        action = f"option={option}"
     else:
         action = f"part={part}&chapter={chapter}&section={section}&line={line + 1}"
     text_message['body']['contents'][0]['action']['data'] = action
@@ -171,6 +174,12 @@ def callback():
         pprint(event)
         if event['type'] == 'postback':
             postback_data = parse_qs(event['postback']['data'])
+            if "option" in postback_data:
+                message = {
+                    "type": "text",
+                    "text": option
+                }
+                reply_message(reply_token, message)
             if "section" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
