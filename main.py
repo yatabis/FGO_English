@@ -101,7 +101,7 @@ def create_option_text(part, chapter, section, line, option):
                 {
                     "type": "postback",
                     "label": "choice 2",
-                    "data": f"part={part}&chapter={chapter}&section={section}&line={line1}"
+                    "data": f"part={part}&chapter={chapter}&section={section}&line={line2}"
                 }
             ]
         }
@@ -240,7 +240,7 @@ def callback():
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
                 section = int(postback_data['section'][0])
-                line = postback_data['line']
+                line = int(postback_data['line'][0])
                 option = postback_data['option'][0]
                 option_text = create_option_text(part, chapter, section, line, option)
                 reply_message(reply_token, option_text)
