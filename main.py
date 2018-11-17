@@ -140,7 +140,7 @@ def get_action(part, chapter, section, line, option, flag):
     return action
 
 
-def load_text_line(part, chapter, section, line):
+def load_text_line(part, chapter, section, line, username):
     name = get_name(part, chapter, section)
     record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
     print(record)
@@ -252,7 +252,7 @@ def callback():
                 line = int(postback_data['line'][0]) if 'line' in postback_data else 1
                 name = get_name(part, chapter, section)
                 if name in table_list:
-                    text_line = load_text_line(part, chapter, section, line)
+                    text_line = load_text_line(part, chapter, section, line, username)
                     reply_message(reply_token, text_line)
                 else:
                     unimplemented_text = unimplemented(part, chapter, section)
