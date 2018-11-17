@@ -145,8 +145,8 @@ def load_text_line(part, chapter, section, line):
     record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
     print(record)
     speaker = get_speaker(record)
-    text = eval(f"f\"{record['text']}\"")
-    text_en = eval(f"f\"{record['text_en']}\"")
+    text = record['text'].replace("\n", "\\n")
+    text_en = record['text_en'].replace("\n", "\\n")
     size = record['size'] if not record['size'] == '' else None
     color = get_font_color(speaker)
     flag = int(record['flag']) if not np.isnan(record['flag']) else None
@@ -154,8 +154,8 @@ def load_text_line(part, chapter, section, line):
     text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message_en = deepcopy(story_text_message)
-    text_message['body']['contents'][0]['text'] = text
-    text_message_en['body']['contents'][0]['text'] = text_en
+    text_message['body']['contents'][0]['text'] = eval(f"f\"{text}\"")
+    text_message_en['body']['contents'][0]['text'] = eval(f"f\"{text_en}\"")
     if size is not None:
         text_message['body']['contents'][0]['size'] = size
         text_message_en['body']['contents'][0]['size'] = size
