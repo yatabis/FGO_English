@@ -82,32 +82,94 @@ def get_name(part, chapter=None, section=None):
     return name
 
 
-def load_text_line(part, chapter, section, line):
-    name = get_name(part, chapter, section)
-    record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
-    print(record)
-    speaker = f"{record['speaker']} ({record['speaker_en']})"
-    text = record['text']
-    text_en = record['text_en']
-    flag = record['flag'] if not np.isnan(record['flag']) else None
-    option = record['option'] if not np.isnan(record['option']) else None
-    # size = record['size']
-    text_unit = deepcopy(story_text_unit)
-    text_message = deepcopy(story_text_message)
-    text_message_en = deepcopy(story_text_message)
-    text_message['body']['contents'][0]['text'] = text
-    text_message_en['body']['contents'][0]['text'] = text_en
-    # text_message['body']['contents'][0]['size'] = size
-    # text_message_en['body']['contents'][0]['size'] = size
-    if speaker == "アナウンス":
-        text_message['body']['contents'][0]['color'] = "#00dddd"
-        text_message_en['body']['contents'][0]['color'] = "#00dddd"
+def create_option_text(part, chapter, section, line, option):
+    message = {
+        "type": "template",
+        "altText": f"option {option}",
+        "template": {
+            "type": "confirm",
+            "text": f"オプション{option}",
+            "actions": [
+                {
+                    "type": "postback",
+                    "label": "choice 1",
+                    "data": f"main={main}&chapter={chapter}&section={section}&line{line + 1}&flag={1}"
+                },
+                {
+                    "type": "postback",
+                    "label": "choice 2",
+                    "data": f"main={main}&chapter={chapter}&section={section}&line{line + 1}&flag={2}"
+                }
+            ]
+        }
+    }
+    return message
+
+
+def get_speaker(record):
+    if np.isnan(record['speaker']):
+        speaker = None
+    elif np.isnan(record['speaker_en']):
+        speaker = record['speaker']
+    else:
+        speaker = f"{record['speaker']} ({record['speaker_en']})"
+    return speaker
+
+
+def get_font_color(speaker):
+    magenta = ["アナウンス"]
+    if speaker in magenta:
+        color = "#00dddd"
+    else:
+        color = None
+    return color
+
+
+def get_next_record_line(df, line, flag):
+    loop = True
+    while loop:
+        line += 1
+        next_record = df[df['line'] == line].to_dict(orient='record')[0]
+        if next_record['flag'] is None or next_record['flag'] == flag:
+            loop = False
+    return line
+
+
+def get_action(part, chapter, section, line, option, flag):
     if flag == -1:
         action = f"part={part}&chapter={chapter}"
     elif option is not None:
         action = f"option={option}"
     else:
-        action = f"part={part}&chapter={chapter}&section={section}&line={line + 1}"
+        name = get_name(part, chapter, section)
+        next_line = get_next_record_line(eval(name), line, flag)
+        action = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
+    return action
+
+
+def load_text_line(part, chapter, section, line):
+    name = get_name(part, chapter, section)
+    record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
+    print(record)
+    speaker = get_speaker(record)
+    text = record['text']
+    text_en = record['text_en']
+    size = record['size'] if not np.isnan(record['flag']) else None
+    color = get_font_color(speaker)
+    flag = record['flag'] if not np.isnan(record['flag']) else None
+    option = record['option'] if not np.isnan(record['option']) else None
+    text_unit = deepcopy(story_text_unit)
+    text_message = deepcopy(story_text_message)
+    text_message_en = deepcopy(story_text_message)
+    text_message['body']['contents'][0]['text'] = text
+    text_message_en['body']['contents'][0]['text'] = text_en
+    if size is not None:
+        text_message['body']['contents'][0]['size'] = size
+        text_message_en['body']['contents'][0]['size'] = size
+    if color is not None:
+        text_message['body']['contents'][0]['color'] = color
+        text_message_en['body']['contents'][0]['color'] = color
+    action = get_action(part, chapter, section, line, option, flag)
     text_message['body']['contents'][0]['action']['data'] = action
     text_message_en['body']['contents'][0]['action']['data'] = action
     text_unit[0]['text'] = speaker
@@ -175,10 +237,13 @@ def callback():
         if event['type'] == 'postback':
             postback_data = parse_qs(event['postback']['data'])
             if "option" in postback_data:
-                message = {
-                    "type": "text",
-                    "text": option
-                }
+                part = postback_data['part'][0]
+                chapter = postback_data['chapter'][0]
+                section = int(postback_data['section'][0])
+                line = postback_data['line']
+                option = postback_data['option'][0]
+                option_text = create_option_text(part, chapter, section, line, option)
+                reply_message(reply_token, option_text)
                 reply_message(reply_token, message)
             if "section" in postback_data:
                 part = postback_data['part'][0]
