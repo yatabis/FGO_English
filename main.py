@@ -109,8 +109,7 @@ def create_option_text(part, chapter, section, line, option):
 def get_speaker(record):
     speaker = record['speaker']
     speaker_en = record['speaker_en']
-    speaker_text = f"{speaker} ({speaker_en})" if isinstance(speaker_en, str) \
-        else f"{speaker}" if isinstance(speaker, str) else None
+    speaker_text = f"{speaker} ({speaker_en})" if not speaker_en == '' else f"{speaker}" if not speaker == '' else None
     return speaker_text
 
 
@@ -152,7 +151,7 @@ def load_text_line(part, chapter, section, line):
     speaker = get_speaker(record)
     text = record['text']
     text_en = record['text_en']
-    size = record['size'] if not np.isnan(record['flag']) else None
+    size = record['size'] if not record['size'] == '' else None
     color = get_font_color(speaker)
     flag = record['flag'] if not np.isnan(record['flag']) else None
     option = record['option'] if not np.isnan(record['option']) else None
