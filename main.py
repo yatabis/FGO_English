@@ -127,7 +127,8 @@ def get_next_record_line(df, line, flag):
     while loop:
         line += 1
         next_record = df[df['line'] == line].to_dict(orient='record')[0]
-        loop = next_record['flag'] in {flag, 0, None}
+        next_flag = next_record['flag'] if not np.isnan(next_record['flag']) else None
+        loop = next_flag in {flag, 0, None}
     return line
 
 
@@ -135,7 +136,7 @@ def get_action(part, chapter, section, line, option, flag):
     if flag == -1:
         action = f"part={part}&chapter={chapter}"
     elif option is not None:
-        action = f"option={option}"
+        action = f"part={part}&chapter={chapter}&section={section}&line={line}&option={option}"
     else:
         name = get_name(part, chapter, section)
         next_line = get_next_record_line(eval(name), line, flag)
