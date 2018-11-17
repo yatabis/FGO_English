@@ -222,7 +222,7 @@ def unimplemented(part, chapter=None, section=None):
 
 
 def get_username(user_id):
-    req = requests.get(EP + user_id, headers=HEADER)
+    req = requests.get(USERNAME_EP + user_id, headers=HEADER)
     name = req.json()['displayName']
     return name
 
