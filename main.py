@@ -14,6 +14,7 @@ CAT = os.environ['CHANNEL_ACCESS_TOKEN']
 HEADER = {'Content-Type': 'application/json',
           'Authorization': f"Bearer {CAT}"}
 REPLY_EP = "https://api.line.me/v2/bot/message/reply"
+USERNAME_EP = "https://api.line.me/v2/bot/profile/"
 
 with open("LINEObject/main_record_carousel.json") as j:
     main_record_carousel = json.load(j)
@@ -144,8 +145,8 @@ def load_text_line(part, chapter, section, line):
     record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
     print(record)
     speaker = get_speaker(record)
-    text = record['text']
-    text_en = record['text_en']
+    text = eval(f"f\"{record['text']}\"")
+    text_en = eval(f"f\"{record['text_en']}\"")
     size = record['size'] if not record['size'] == '' else None
     color = get_font_color(speaker)
     flag = int(record['flag']) if not np.isnan(record['flag']) else None
@@ -220,11 +221,19 @@ def unimplemented(part, chapter=None, section=None):
     return text
 
 
+def get_username(user_id):
+    req = requests.get(EP + user_id, headers=HEADER)
+    name = req.json()['displayName']
+    return name
+
+
 @route('/callback', method='POST')
 def callback():
     events = request.json['events']
     for event in events:
         reply_token = event['replyToken']
+        user_id = event['source']['userId']
+        username = get_username(user_id)
         pprint(event)
         if event['type'] == 'postback':
             postback_data = parse_qs(event['postback']['data'])
