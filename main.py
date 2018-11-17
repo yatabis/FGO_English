@@ -90,7 +90,7 @@ def get_name(part, chapter=None, section=None):
 
 def create_option_text(part, chapter, section, line, option):
     name = get_name(part, chapter, section)
-    choices = [c for c in option_list.to_dict(orient='split')['data'][id] if isinstance(c, str)]
+    choices = [c for c in option_list.to_dict(orient='split')['data'][option] if isinstance(c, str)]
     choice_list = deepcopy(option_container)
     for c in range(len(choices)):
         choice_btn = deepcopy(option_choice)
