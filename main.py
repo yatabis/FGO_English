@@ -83,6 +83,9 @@ def get_name(part, chapter=None, section=None):
 
 
 def create_option_text(part, chapter, section, line, option):
+    name = get_name(part, chapter, section)
+    line1 = get_next_record_line(eval(name), line, 1)
+    line2 = get_next_record_line(eval(name), line, 2)
     message = {
         "type": "template",
         "altText": f"option {option}",
@@ -93,12 +96,12 @@ def create_option_text(part, chapter, section, line, option):
                 {
                     "type": "postback",
                     "label": "choice 1",
-                    "data": f"part={part}&chapter={chapter}&section={section}&line{line + 1}&flag={1}"
+                    "data": f"part={part}&chapter={chapter}&section={section}&line={line1}"
                 },
                 {
                     "type": "postback",
                     "label": "choice 2",
-                    "data": f"part={part}&chapter={chapter}&section={section}&line{line + 1}&flag={2}"
+                    "data": f"part={part}&chapter={chapter}&section={section}&line={line1}"
                 }
             ]
         }
