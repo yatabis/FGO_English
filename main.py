@@ -93,12 +93,12 @@ def create_option_text(part, chapter, section, line, option):
                 {
                     "type": "postback",
                     "label": "choice 1",
-                    "data": f"main={main}&chapter={chapter}&section={section}&line{line + 1}&flag={1}"
+                    "data": f"part={part}&chapter={chapter}&section={section}&line{line + 1}&flag={1}"
                 },
                 {
                     "type": "postback",
                     "label": "choice 2",
-                    "data": f"main={main}&chapter={chapter}&section={section}&line{line + 1}&flag={2}"
+                    "data": f"part={part}&chapter={chapter}&section={section}&line{line + 1}&flag={2}"
                 }
             ]
         }
@@ -107,13 +107,11 @@ def create_option_text(part, chapter, section, line, option):
 
 
 def get_speaker(record):
-    if np.isnan(record['speaker']):
-        speaker = None
-    elif np.isnan(record['speaker_en']):
-        speaker = record['speaker']
-    else:
-        speaker = f"{record['speaker']} ({record['speaker_en']})"
-    return speaker
+    speaker = record['speaker']
+    speaker_en = record['speaker_en']
+    speaker_text = f"{speaker} ({speaker_en})" if isinstance(speaker_en, str) \
+        else f"{speaker}" if isinstance(speaker, str) else None
+    return speaker_text
 
 
 def get_font_color(speaker):
