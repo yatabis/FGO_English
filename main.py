@@ -158,7 +158,7 @@ def load_text_line(part, chapter, section, line, username):
     text_message['contents']['body']['contents'][0]['text'] = speaker
     text_message['contents']['body']['contents'][2]['contents'][1]['contents'][0]['text'] = text.format(username=username)
     text_message['contents']['body']['contents'][2]['contents'][1]['contents'][2]['text'] = text_en.format(username=username)
-    if record['size'] != '':
+    if record['size'] is not None:
         text_message['contents']['body']['contents'][2]['contents'][1]['contents'][0]['size'] = size
         text_message['contents']['body']['contents'][2]['contents'][1]['contents'][2]['size'] = size
     if color is not None:
