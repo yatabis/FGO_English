@@ -47,10 +47,7 @@ with open("LINEObject/option_choice.json") as j:
 def reply_message(token, messages):
     body = {'replyToken': token, 'messages': messages}
     req = requests.post(REPLY_EP, data=json.dumps(body, ensure_ascii=False).encode("utf-8"), headers=HEADER)
-    if req.status_code == 200:
-        pprint(req.json())
-    else:
-        print(f"Error: {req.status_code}")
+    if req.status_code != 200:
         pprint(req.json())
 
 
@@ -146,6 +143,7 @@ def get_action(part, chapter, section, line, option, flag):
 def load_text_line(part, chapter, section, line, username):
     name = get_name(part, chapter, section)
     record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
+    pprint(record)
     speaker = get_speaker(record)
     text = record['text']
     text_en = record['text_en']
