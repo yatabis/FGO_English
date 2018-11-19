@@ -148,7 +148,7 @@ def load_text_line(part, chapter, section, line, username):
     text = record['text']
     text_en = record['text_en']
     size = record['size']
-    color = get_font_color(speaker)
+    color = get_font_color(record['speaker'])
     flag = int(record['flag']) if not np.isnan(record['flag']) else None
     option = int(record['option']) if not np.isnan(record['option']) else None
     action = get_action(part, chapter, section, line, option, flag)

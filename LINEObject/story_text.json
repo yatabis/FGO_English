@@ -28,7 +28,7 @@
             {
               "type": "box",
               "layout": "vertical",
-              "spacing": "sm",
+              "spacing": "md",
               "contents": [
                 {
                   "type": "text",
@@ -55,13 +55,12 @@
         {
           "type": "text",
           "text": "▼",
-          "flex": 0,
           "size": "xxs",
           "align": "end",
           "color": "#dddddd"
         }
       ],
-      "spacing": "sm",
+      "spacing": "md",
       "action": {
         "type": "postback",
         "label": "next",
