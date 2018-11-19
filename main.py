@@ -34,6 +34,9 @@ with open("LINEObject/story_text_unit.json") as j:
 with open("LINEObject/story_text_message.json") as j:
     story_text_message = json.load(j)
 
+with open("LINEObject/story_text.json") as j:
+    story_text = json.load(j)
+
 with open("LINEObject/option_container.json") as j:
     option_container = json.load(j)
 
@@ -143,19 +146,34 @@ def get_action(part, chapter, section, line, option, flag):
 def load_text_line(part, chapter, section, line, username):
     name = get_name(part, chapter, section)
     record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
-    print(record)
     speaker = get_speaker(record)
-    text = record['text'].replace("\n", "\\n")
-    text_en = record['text_en'].replace("\n", "\\n")
-    size = record['size'] if not record['size'] == '' else None
+    text = record['text']
+    text_en = record['text_en']
+    size = record['size']
     color = get_font_color(speaker)
     flag = int(record['flag']) if not np.isnan(record['flag']) else None
     option = int(record['option']) if not np.isnan(record['option']) else None
-    text_unit = deepcopy(story_text_unit)
+    action = get_action(part, chapter, section, line, option, flag)
+
+    text_message = deepcopy(story_text)
+    text_message['altText'] = f"Story {chapter}-{section}: {line}"
+    text_message['contents']['body']['contents'][0]['text'] = speaker
+    text_message['contents']['body']['contents'][2]['contents'][1]['contents'][0]['text'] = text.format(username=username)
+    text_message['contents']['body']['contents'][2]['contents'][1]['contents'][2]['text'] = text_en.format(username=username)
+    if record['size'] != '':
+        text_message['contents']['body']['contents'][2]['contents'][1]['contents'][0]['size'] = size
+        text_message['contents']['body']['contents'][2]['contents'][1]['contents'][2]['size'] = size
+    if color is not None:
+        text_message['contents']['body']['contents'][2]['contents'][1]['contents'][0]['color'] = color
+        text_message['contents']['body']['contents'][2]['contents'][1]['contents'][2]['color'] = color
+        text_message['contents']['body']['contents'][0]['color'] = color
+    text_message['contents']['body']['action']['data'] = action
+
+    """text_unit = deepcopy(story_text_unit)
     text_message = deepcopy(story_text_message)
     text_message_en = deepcopy(story_text_message)
-    text_message['body']['contents'][0]['text'] = eval(f"f\"{text}\"")
-    text_message_en['body']['contents'][0]['text'] = eval(f"f\"{text_en}\"")
+    text_message['body']['contents'][0]['text'] = text.format(username=username)
+    text_message_en['body']['contents'][0]['text'] = text_en.format(username=username)
     if size is not None:
         text_message['body']['contents'][0]['size'] = size
         text_message_en['body']['contents'][0]['size'] = size
@@ -169,8 +187,8 @@ def load_text_line(part, chapter, section, line, username):
     text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[2]['altText'] = f"Story {chapter}-{section}: {line}"
     text_unit[1]['contents'] = text_message
-    text_unit[2]['contents'] = text_message_en
-    return text_unit
+    text_unit[2]['contents'] = text_message_en"""
+    return text_message
 
 
 def create_chapter(part, chapter):

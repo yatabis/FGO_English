@@ -1,0 +1,77 @@
+{
+  "type": "flex",
+  "altText": "Story 0-0: 0",
+  "contents": {
+    "type": "bubble",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "text",
+          "text": "speaker",
+          "size": "sm",
+          "color": "#dddddd"
+        },
+        {
+          "type": "separator",
+          "color": "#dddddd"
+        },
+        {
+          "type": "box",
+          "layout": "horizontal",
+          "contents": [
+            {
+              "type": "spacer",
+              "size": "xl"
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "テキスト",
+                  "size": "sm",
+                  "wrap": true,
+                  "color": "#dddddd"
+                },
+                {
+                  "type": "separator",
+                  "color": "#4466ff"
+                },
+                {
+                  "type": "text",
+                  "text": "text",
+                  "size": "sm",
+                  "wrap": true,
+                  "color": "#dddddd"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "▼",
+          "flex": 0,
+          "size": "xxs",
+          "align": "end",
+          "color": "#dddddd"
+        }
+      ],
+      "spacing": "sm",
+      "action": {
+        "type": "postback",
+        "label": "next",
+        "data": "part=0&chapter=0section=0&line=0"
+      }
+    },
+    "styles": {
+      "body": {
+        "backgroundColor": "#223388"
+      }
+    }
+  }
+}
