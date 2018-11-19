@@ -271,7 +271,7 @@ def callback():
                 name = get_name(part, chapter, section)
                 if name in table_list:
                     text_line = load_text_line(part, chapter, section, line, username)
-                    reply_message(reply_token, text_line)
+                    reply_message(reply_token, [text_line])
                 else:
                     unimplemented_text = unimplemented(part, chapter, section)
                     reply_text(reply_token, unimplemented_text)
