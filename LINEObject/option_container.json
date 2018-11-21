@@ -7,12 +7,25 @@
       "type": "box",
       "layout": "vertical",
       "contents": [
+        {
+          "type": "text",
+          "text": "text",
+          "size": "sm",
+          "align": "center",
+          "wrap": true,
+          "color": "#dddddd",
+          "action": {
+            "type": "postback",
+            "label": "choice",
+            "data": "part=0&chapter=0section=0&line=0"
+          }
+        }
       ],
-      "spacing": "lg"
+      "spacing": "md"
     },
     "styles": {
       "body": {
-        "backgroundColor": "#223388"
+        "backgroundColor": "#000000"
       }
     }
   }

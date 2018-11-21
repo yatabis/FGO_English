@@ -90,16 +90,23 @@ def get_name(part, chapter=None, section=None):
 
 
 def create_option_text(part, chapter, section, line, option):
-    name = get_name(part, chapter, section)
     choices = [c for c in option_list.to_dict(orient='split')['data'][option] if isinstance(c, str)]
-    choice_list = deepcopy(option_container)
+    choice_message = [deepcopy(option_choice) for _ in choices]
+    for c in range(len(choices)):
+        action = get_action(part, chapter, section, line, None, c + 1)
+        choice_message[c]['contents']['body']['contents'][0]['text'] = choices[c]
+        choice_message[c]['contents']['body']['contents'][0]['action']['label'] = f"choice {c}"
+        choice_message[c]['contents']['body']['contents'][0]['action']['data'] = action
+
+    """choice_list = deepcopy(option_container)
     for c in range(len(choices)):
         choice_btn = deepcopy(option_choice)
         choice_btn['action']['label'] = choices[c]
         next_line = get_next_record_line(eval(name), line, c + 1)
         choice_btn['action']['data'] = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
-        choice_list['contents']['body']['contents'].append(choice_btn)
-    return choice_list
+        choice_list['contents']['body']['contents'].append(choice_btn)"""
+
+    return choice_message
 
 
 def get_speaker(record):
@@ -167,26 +174,7 @@ def load_text_line(part, chapter, section, line, username):
         text_message['contents']['body']['contents'][0]['color'] = color
     text_message['contents']['body']['action']['data'] = action
 
-    """text_unit = deepcopy(story_text_unit)
-    text_message = deepcopy(story_text_message)
-    text_message_en = deepcopy(story_text_message)
-    text_message['body']['contents'][0]['text'] = text.format(username=username)
-    text_message_en['body']['contents'][0]['text'] = text_en.format(username=username)
-    if size is not None:
-        text_message['body']['contents'][0]['size'] = size
-        text_message_en['body']['contents'][0]['size'] = size
-    if color is not None:
-        text_message['body']['contents'][0]['color'] = color
-        text_message_en['body']['contents'][0]['color'] = color
-    action = get_action(part, chapter, section, line, option, flag)
-    text_message['body']['contents'][0]['action']['data'] = action
-    text_message_en['body']['contents'][0]['action']['data'] = action
-    text_unit[0]['text'] = speaker
-    text_unit[1]['altText'] = f"Story {chapter}-{section}: {line}"
-    text_unit[2]['altText'] = f"Story {chapter}-{section}: {line}"
-    text_unit[1]['contents'] = text_message
-    text_unit[2]['contents'] = text_message_en"""
-    return text_message
+    return [text_message]
 
 
 def create_chapter(part, chapter):
@@ -201,7 +189,7 @@ def create_chapter(part, chapter):
         section_button['action']['label'] = sec['title']
         section_button['action']['data'] = f"part={part}&chapter={chapter}&section={sec['section']}"
         section_list['contents']['body']['contents'].append(section_button)
-    return section_list
+    return [section_list]
 
 
 def create_part(part):
@@ -215,7 +203,7 @@ def create_part(part):
             f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png"
         part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
         part_carousel['template']['columns'].append(part_column)
-    return part_carousel
+    return [part_carousel]
 
 
 def unimplemented(part, chapter=None, section=None):
@@ -260,7 +248,7 @@ def callback():
                 line = int(postback_data['line'][0])
                 option = int(postback_data['option'][0])
                 option_text = create_option_text(part, chapter, section, line, option)
-                reply_message(reply_token, [option_text])
+                reply_message(reply_token, option_text)
             elif "section" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
@@ -269,7 +257,7 @@ def callback():
                 name = get_name(part, chapter, section)
                 if name in table_list:
                     text_line = load_text_line(part, chapter, section, line, username)
-                    reply_message(reply_token, [text_line])
+                    reply_message(reply_token, text_line)
                 else:
                     unimplemented_text = unimplemented(part, chapter, section)
                     reply_text(reply_token, unimplemented_text)
@@ -279,7 +267,7 @@ def callback():
                 name = get_name(part, chapter)
                 if name in table_list:
                     section_list = create_chapter(part, chapter)
-                    reply_message(reply_token, [section_list])
+                    reply_message(reply_token, section_list)
                 else:
                     unimplemented_text = unimplemented(part, chapter)
                     reply_text(reply_token, unimplemented_text)
@@ -288,7 +276,7 @@ def callback():
                 name = get_name(part)
                 if name in table_list:
                     part_carousel = create_part(part)
-                    reply_message(reply_token, [part_carousel])
+                    reply_message(reply_token, part_carousel)
                 else:
                     unimplemented_text = unimplemented(part)
                     reply_text(reply_token, unimplemented_text)
