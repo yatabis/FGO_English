@@ -28,17 +28,8 @@ with open("LINEObject/chapter_container.json") as j:
 with open("LINEObject/chapter_contents.json") as j:
     chapter_contents = json.load(j)
 
-with open("LINEObject/story_text_unit.json") as j:
-    story_text_unit = json.load(j)
-
-with open("LINEObject/story_text_message.json") as j:
-    story_text_message = json.load(j)
-
 with open("LINEObject/story_text.json") as j:
     story_text = json.load(j)
-
-with open("LINEObject/option_container.json") as j:
-    option_container = json.load(j)
 
 with open("LINEObject/option_choice.json") as j:
     option_choice = json.load(j)
@@ -97,14 +88,6 @@ def create_option_text(part, chapter, section, line, option):
         choice_message[c]['contents']['body']['contents'][0]['text'] = choices[c]
         choice_message[c]['contents']['body']['contents'][0]['action']['label'] = f"choice {c}"
         choice_message[c]['contents']['body']['contents'][0]['action']['data'] = action
-
-    """choice_list = deepcopy(option_container)
-    for c in range(len(choices)):
-        choice_btn = deepcopy(option_choice)
-        choice_btn['action']['label'] = choices[c]
-        next_line = get_next_record_line(eval(name), line, c + 1)
-        choice_btn['action']['data'] = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
-        choice_list['contents']['body']['contents'].append(choice_btn)"""
 
     return choice_message
 
