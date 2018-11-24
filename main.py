@@ -67,19 +67,6 @@ def mash_talk(token):
     reply_message(token, message)
 
 
-def get_name(part, chapter=None, section=None):
-    if section is not None:
-        part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
-        chapter = eval(part)[eval(part)['chapter'] == chapter]['name'].item().replace(" ", "_")
-        name = eval(chapter)[eval(chapter)['section'] == section]['table_title'].item().lower()
-    elif chapter is not None:
-        part = main_record[main_record['main record'] == float(part)]['name'].item().lower().replace(" ", "_")
-        name = eval(part)[eval(part)['chapter'] == chapter]['name'].item()
-    else:
-        name = main_record[main_record['main record'] == float(part)]['name'].item().lower()
-    return name
-
-
 def create_option_text(part, chapter, section, line, option):
     choices = [c for c in option_list.to_dict(orient='split')['data'][option] if isinstance(c, str)]
     choice_message = [deepcopy(option_choice) for _ in choices]
@@ -92,11 +79,8 @@ def create_option_text(part, chapter, section, line, option):
     return choice_message
 
 
-def get_speaker(record):
-    speaker = record['speaker']
-    speaker_en = record['speaker_en']
-    speaker_text = f"{speaker} ({speaker_en})" if speaker_en else f"{speaker}" if speaker else None
-    return speaker_text
+def get_speaker(speaker, speaker_en):
+    return f"{speaker} ({speaker_en})" if speaker_en else f"{speaker}" if speaker else None
 
 
 def get_font_color(speaker):
@@ -108,11 +92,11 @@ def get_font_color(speaker):
     return color
 
 
-def get_next_record_line(df, line, flag):
+def get_next_record_line(part, chapter, section, line, flag):
     loop = True
     while loop:
         line += 1
-        next_record = df[df['line'] == line].to_dict(orient='record')[0]
+        next_record = main_record[part]['contents'][chapter]['contents'][section]['contents'][line]
         next_flag = next_record['flag'] if not np.isnan(next_record['flag']) else None
         loop = next_flag not in {flag, 0, -1, None}
     return line
@@ -124,17 +108,14 @@ def get_action(part, chapter, section, line, option, flag):
     elif option is not None:
         action = f"part={part}&chapter={chapter}&section={section}&line={line}&option={option}"
     else:
-        name = get_name(part, chapter, section)
-        next_line = get_next_record_line(eval(name), line, flag)
+        next_line = get_next_record_line(part, chapter, section, line, flag)
         action = f"part={part}&chapter={chapter}&section={section}&line={next_line}"
     return action
 
 
 def load_text_line(part, chapter, section, line, username):
-    name = get_name(part, chapter, section)
-    record = eval(name)[eval(name)['line'] == line].to_dict(orient='record')[0]
-    pprint(record)
-    speaker = get_speaker(record)
+    record = main_record[part]['contents'][chapter]['contents'][section]['contents'][line]
+    speaker = get_speaker(record['speaker'], record['speaker_en'])
     text = record['text']
     text_en = record['text_en']
     size = record['size']
@@ -161,30 +142,29 @@ def load_text_line(part, chapter, section, line, username):
 
 
 def create_chapter(part, chapter):
-    name = get_name(part, chapter)
+    name = main_record[part]['contents'][chapter]['name']
     section_list = deepcopy(chapter_container)
     section_list['altText'] = f"Chapter {chapter}"
     section_list['contents']['hero'][
         'url'] = f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{name}.png"
-    section = eval(name).to_dict(orient='record')
-    for sec in section:
+    section = main_record[part]['contents'][chapter]['contents']
+    for k, v in section.items():
         section_button = deepcopy(chapter_contents)
-        section_button['action']['label'] = sec['title']
-        section_button['action']['data'] = f"part={part}&chapter={chapter}&section={sec['section']}"
+        section_button['action']['label'] = v['title']
+        section_button['action']['data'] = f"part={part}&chapter={chapter}&section={k}"
         section_list['contents']['body']['contents'].append(section_button)
     return [section_list]
 
 
 def create_part(part):
-    name = get_name(part)
     part_carousel = deepcopy(main_record_carousel)
     part_carousel['altText'] = f"Main Record {part}"
-    chapter = eval(name.replace(" ", "_")).to_dict(orient='record')
-    for chap in chapter:
+    chapter = main_record[part]['contents']
+    for k, v in chapter.items():
         part_column = deepcopy(main_record_carousel_column)
         part_column['imageUrl'] = \
-            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{chap['name']}.png"
-        part_column['action']['data'] = f"part={part}&chapter={chap['chapter']}"
+            f"https://raw.githubusercontent.com/yatabis/FGO_English/master/images/{v['name']}.png"
+        part_column['action']['data'] = f"part={part}&chapter={k}"
         part_carousel['template']['columns'].append(part_column)
     return [part_carousel]
 
@@ -237,8 +217,7 @@ def callback():
                 chapter = postback_data['chapter'][0]
                 section = int(postback_data['section'][0])
                 line = int(postback_data['line'][0]) if 'line' in postback_data else 1
-                name = get_name(part, chapter, section)
-                if name in table_list:
+                if main_record[part]['contents'][section]['contents'][section]['name'].lower() in table_list:
                     text_line = load_text_line(part, chapter, section, line, username)
                     reply_message(reply_token, text_line)
                 else:
@@ -247,8 +226,7 @@ def callback():
             elif "chapter" in postback_data:
                 part = postback_data['part'][0]
                 chapter = postback_data['chapter'][0]
-                name = get_name(part, chapter)
-                if name in table_list:
+                if main_record[part]['contents'][chapter]['name'].lower() in table_list:
                     section_list = create_chapter(part, chapter)
                     reply_message(reply_token, section_list)
                 else:
@@ -256,8 +234,7 @@ def callback():
                     reply_text(reply_token, unimplemented_text)
             elif 'part' in postback_data:
                 part = postback_data['part'][0]
-                name = get_name(part)
-                if name in table_list:
+                if main_record[part]['name'].lower() in table_list:
                     part_carousel = create_part(part)
                     reply_message(reply_token, part_carousel)
                 else:
@@ -270,21 +247,5 @@ def callback():
 
 
 if __name__ == '__main__':
-    connection_config = {
-        'user': os.environ['DB_USER'],
-        'password': os.environ['DB_PASS'],
-        'host': os.environ['DB_HOST'],
-        'database': os.environ['DB_NAME'],
-        'cursorclass': pymysql.cursors.DictCursor
-    }
-    connection = pymysql.connect(**connection_config)
-    main_record = pd.read_sql('select * from `main record`', connection)
-    observer_on_timeless_temple = pd.read_sql('select * from `Observer on Timeless Temple`', connection)
-    fuyuki = pd.read_sql('select * from fuyuki', connection)
-    prologue = pd.read_sql('select * from prologue', connection)
-    option_list = pd.read_sql('select * from option_list', connection)
-    mash = pd.read_sql('select * from mash_talk', connection)
-    tables = pd.read_sql('show tables', connection).values
-    table_list = tables.reshape(len(tables))
-    connection.close()
+    from main_record import main_record, option_list, mash_talk
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
