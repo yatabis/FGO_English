@@ -17,7 +17,7 @@ def load_tables(name):
     for r in df:
         pk = list(r.keys())[0]
         if isinstance(r[pk], float):
-            return {r.pop(pk) if r[pk] % 1 else int(r.pop(pk)): r for r in df}
+            return {str(r.pop(pk)) if r[pk] % 1 else str(int(r.pop(pk))): r for r in df}
         else:
             return {r.pop(pk): r for r in df}
 
