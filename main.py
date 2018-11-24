@@ -38,8 +38,7 @@ with open("LINEObject/option_choice.json") as j:
 def reply_message(token, messages):
     body = {'replyToken': token, 'messages': messages}
     req = requests.post(REPLY_EP, data=json.dumps(body, ensure_ascii=False).encode("utf-8"), headers=HEADER)
-    if req.status_code != 200:
-        pprint(req.json())
+    print(req.status_code)
 
 
 def reply_text(token, text):
@@ -68,7 +67,7 @@ def mash_talk(token):
 
 
 def create_option_text(part, chapter, section, line, option):
-    choices = [c for c in option_list.to_dict(orient='split')['data'][option] if isinstance(c, str)]
+    choices = [c for c in option_list[option].values() if isinstance(c, str)]
     choice_message = [deepcopy(option_choice) for _ in choices]
     for c in range(len(choices)):
         action = get_action(part, chapter, section, line, None, c + 1)
