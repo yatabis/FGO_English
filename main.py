@@ -217,7 +217,7 @@ def callback():
                 chapter = postback_data['chapter'][0]
                 section = int(postback_data['section'][0])
                 line = int(postback_data['line'][0]) if 'line' in postback_data else 1
-                if main_record[part]['contents'][section]['contents'][section]['name'].lower() in table_list:
+                if main_record[part]['contents'][chapter]['contents'][section]['name'].lower() in table_list:
                     text_line = load_text_line(part, chapter, section, line, username)
                     reply_message(reply_token, text_line)
                 else:
