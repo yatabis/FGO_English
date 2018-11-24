@@ -247,5 +247,5 @@ def callback():
 
 
 if __name__ == '__main__':
-    from main_record import main_record, option_list, mash_talk
+    from main_record import main_record, option_list, mash_talk, table_list
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
