@@ -68,7 +68,7 @@ prologue = load_tables('prologue')
 
 # Others
 option_list = load_tables('option_list')
-mash_talk = load_tables('mash_talk')
+mash_talk_list = load_tables('mash_talk')
 tables = pd.read_sql('show tables', connection).values
 table_list = tables.reshape(len(tables))
 

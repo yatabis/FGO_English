@@ -51,7 +51,9 @@ def reply_text(token, text):
 
 def mash_talk(token):
     month = datetime.today().month
-    talk_list = mash[mash['month'] == month]
+    day = datetime.today().day
+    talk_id = 0 if month == 1 and day == 1 else month
+    talk_list = mash_talk_list[mash_talk_list['month'] == talk_id]
     rnd = np.random.randint(0, len(talk_list))
     message = [{
         "type": "text",
@@ -246,5 +248,5 @@ def callback():
 
 
 if __name__ == '__main__':
-    from main_record import main_record, option_list, mash_talk, table_list
+    from main_record import main_record, option_list, mash_talk_list, table_list
     run(host="0.0.0.0", port=int(os.environ.get('PORT', 443)))
