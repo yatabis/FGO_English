@@ -49,21 +49,29 @@ def reply_text(token, text):
     reply_message(token, message)
 
 
+def make_mash(talk_id):
+    talk_list = []
+    for talk in mash_talk_list.values():
+        if talk['month'] == talk_id:
+            talk_list.append({'text': talk['text'], 'text_en': talk['text_en']})
+    return talk_list
+
+
 def mash_talk(token):
     month = datetime.today().month
     day = datetime.today().day
     talk_id = 0 if month == 1 and day == 1 else month
-    talk_list = mash_talk_list[mash_talk_list['month'] == talk_id]
+    talk_list = make_mash(talk_id)
     rnd = np.random.randint(0, len(talk_list))
     message = [{
         "type": "text",
         "text": "マシュ (Mash)"
     }, {
         "type": "text",
-        "text": talk_list['text'].values[rnd]
+        "text": talk_list[rnd]['text']
     }, {
         "type": "text",
-        "text": talk_list['text_en'].values[rnd]
+        "text": talk_list[rnd]['text_en']
     }]
     reply_message(token, message)
 
